@@ -7,7 +7,7 @@ Um wrapper assíncrono para a api nekos.life
 # Install
 Installing is done purely via git:
 ```python
-python -m pip install -U git+https://github.com/Rapptz/discord-ext-menus
+python -m pip install -U git+https://github.com/NiumXp/Async-nekos.life-wrapper
 ```
 
 # Quick Example
