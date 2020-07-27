@@ -1,18 +1,31 @@
-from http_client import HttpClient
-
-
-import enumeration
 import typing
-import result
+
+from . import http_client, enumeration, result
 
 Tag = typing.Union[str, enumeration.SFWImageTags, enumeration.NSFWImageTags]
 
 
 class NekosLifeClient:
     def __init__(self, *, session=None):
-        self.http = HttpClient(session=session)
+        self.http = http_client.HttpClient(session=session)
 
     async def image(self, tag: Tag, get_bytes: bool=False):
+        """
+        -> Coroutine
+
+        Parameters
+        ----------
+        tag : Union[str, anekos.SFWImageTags, anekos.NSFWImageTags]
+            The tag of image.
+
+        get_bytes : bool (optional)
+            Gets the byte of image.
+            You can take the bytes in `bytes` attribute of object returned.
+
+        Return
+        ------
+            anekos.result.ImageResult
+        """
         if not isinstance(tag, (str, enumeration.SFWImageTags, enumeration.NSFWImageTags)):
             raise TypeError("'str' or 'Tag' expected")
 

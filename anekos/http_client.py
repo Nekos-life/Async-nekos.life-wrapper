@@ -2,7 +2,7 @@ from aiohttp import ClientSession
 
 from urllib.parse import urljoin, quote
 
-import errors
+from . import errors
 
 
 base = "https://nekos.life/api/v2/"
