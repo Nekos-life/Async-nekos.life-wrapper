@@ -5,6 +5,11 @@ class AutoName(Enum):
     def _generate_next_value_(name, *args):
         return name.lower()
 
+    def to_list(self):
+        raise NotImplementedError()
+
+        return []
+
 
 #['HEAD,OPTIONS,GET     /api/hug -DEPRECATED',
 # 'HEAD,OPTIONS,GET     /api/kiss -DEPRECATED',     
