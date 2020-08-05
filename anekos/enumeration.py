@@ -5,10 +5,9 @@ class AutoName(Enum):
     def _generate_next_value_(name, *args):
         return name.lower()
 
-    def to_list(self):
-        raise NotImplementedError()
-
-        return []
+    @classmethod
+    def to_list(cls):
+        return [attr.value for attr in cls]
 
 
 #['HEAD,OPTIONS,GET     /api/hug -DEPRECATED',
@@ -17,8 +16,6 @@ class AutoName(Enum):
 # 'HEAD,OPTIONS,GET     /api/lizard -DEPRECATED',   
 # 'HEAD,OPTIONS,GET     /api/neko -DEPRECATED',     
 # 'HEAD,OPTIONS,GET     /api/pat -DEPRECATED',      
-# 'HEAD,OPTIONS,GET     /api/v2/name',
-# 'HEAD,OPTIONS,GET     /api/v2/owoify',
 # 'HEAD,OPTIONS,GET     /api/v2/spoiler',
 # 'HEAD,OPTIONS,GET     /api/why -DEPRECATED']
 

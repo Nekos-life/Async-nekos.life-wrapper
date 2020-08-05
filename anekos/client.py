@@ -49,8 +49,25 @@ class NekosLifeClient:
         return result.ImageResult(data_response)
 
     async def random_image(self, *, sfw: bool=True, nsfw: bool=False, get_bytes: bool=False):
-        raise NotImplementedError()
+        """
+        Returns an random image.
 
+        Parameters
+        ----------
+        sfw : bool (optional, default is `True`)
+            anekos.SFWImageTags will be used.
+
+        nsfw : bool (optional, default is `False`)
+            anekos.NSFWImageTags will be used.
+
+        get_bytes : bool (optional)
+            Gets the bytes of an image.
+            You can get the bytes of the image by accessing the `bytes` attribute  of the returned object.
+
+        Return
+        ------
+            anekos.result.ImageResult
+        """
         if not sfw and not nsfw:
             raise Exception()
 
@@ -61,13 +78,11 @@ class NekosLifeClient:
 
         if nsfw:
             nsfw_tags = enumeration.NSFWImageTags.to_list()
-            tags.extens(nsfw_tags)
+            tags.extend(nsfw_tags)
 
         tag = random.choice(tags)
 
-        if get_bytes:
-            pass
-
+        return await self.image(tag, get_bytes=get_bytes)
 
     async def random_fact_text(self):
         """
@@ -108,6 +123,25 @@ class NekosLifeClient:
     #async def random_spoiler(self):
      #   return await self._get("spoiler")
 
+    async def random_name(self):
+        """
+        -> Coroutine
+        Returns a random name.
+
+        Return
+        -------
+            anekos.result.TextResult
+        """
+        data_response = await self.http.endpoint("name")
+        return result.TextResult(data_response, target="name")
+
+    async def owoify(self, text: str):
+        if not (0 < len(text) < 200):
+            raise IndexError()
+
+        data_response = await self.http.endpoint("owoify", text=text)
+        return result.TextResult(data_response, target="owo")
+
     async def random_8ball(self, question, *, get_image_bytes: bool=False):
         """
         -> Coroutine
@@ -117,4 +151,10 @@ class NekosLifeClient:
             anekos.result.EightBallResult
         """
         data_response = await self.http.endpoint("8ball")
+
+        if get_image_bytes:
+            image_url = data_response["url"]
+            image_bytes = await self.http.get_image_bytes(image_url)
+            data_response["image_bytes"] = image_bytes
+
         return result.EightBallResult(data_response)
