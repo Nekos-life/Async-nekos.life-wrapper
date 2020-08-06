@@ -30,6 +30,8 @@ class HttpClient:
         else:
             self._session = ClientSession()
 
+        self._endpoints = None
+
     async def get(self, endpoint: str, **parameters):
         url = make_url(endpoint, parameters)
         async with self._session.get(url) as response:
