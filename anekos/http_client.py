@@ -1,11 +1,14 @@
 from aiohttp import ClientSession
 
 from urllib.parse import urljoin, quote
+from collections import namedtuple
 
 from . import errors
 
 
 base = "https://nekos.life/api/v2/"
+Endpoint = namedtuple("Endpoint", "methods url is_deprecated")
+
 
 def make_url(endpoint, parameters):
     url = urljoin(base, endpoint)
@@ -17,8 +20,9 @@ def make_url(endpoint, parameters):
 class HttpClient:
     """Client for making API requests.
 
-    Parameters:
-        session (asyncio.ClientSession)
+    Parameters
+    ----------
+        session : :class:`asyncio.ClientSession`
     """
     def __init__(self, *, session=None):
         if session:
@@ -35,9 +39,12 @@ class HttpClient:
                 raise errors.NoResponse("endpoint not found")
 
             response = await response.json()
-            
-            if response.get("msg", None):
-                raise errors.NoResponse("endpoint not found")
+            # the response can be a list or a dict
+            # a list when the request is in /api/v2/endpoints
+
+            if type(response) is dict:
+                if response.get("msg", None):
+                    raise errors.NoResponse("endpoint not found")
 
         return url, response
  
@@ -46,11 +53,15 @@ class HttpClient:
         -> Coroutine
         Returns the image in bytes.
         
-        Paremeters:
-            image_url (str): Image URL.
+        Paremeters
+        ----------
+            image_url : :class:`str`
+                Image URL.
 
-        Return:
-            bytes: Image in bytes.
+        Return
+        ------
+            image_bytes : :class:`bytes`
+                Image in bytes.
         """
         async with self._session.get(image_url) as response:
             return await response.read()
@@ -70,5 +81,33 @@ class HttpClient:
         return {"endpoint": url, **response}
 
     async def endpoints(self):
-        #'HEAD,OPTIONS,GET     /api/v2/endpoints',
-        raise NotImplementedError()
+        """
+        -> Coroutine
+        Returns all endpoints of the API.
+        
+        Return
+        ------
+            List[anekos.Endpoint]
+        """
+        if self._endpoints:
+            return self._endpoints
+
+        _, endpoints_ = await self.get("endpoints")
+        for _ in range(len(endpoints_)):
+            endpoint = endpoints_.pop(-1)
+            methods, right = endpoint.split('     ')
+
+            if right.endswith("-DEPRECATED"):
+                is_deprecated = True
+                url, _ = right.split(' ', 1)
+            else:
+                is_deprecated = False
+                url = right
+
+            url = "https://nekos.life" + url
+
+            endpoint = Endpoint(methods.split(','), url, is_deprecated)
+            endpoints_.insert(0, endpoint)
+
+        self._endpoints = endpoints_
+        return endpoints_

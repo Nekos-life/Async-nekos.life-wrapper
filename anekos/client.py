@@ -9,9 +9,10 @@ Tag = typing.Union[str, enumeration.SFWImageTags, enumeration.NSFWImageTags]
 class NekosLifeClient:
     """
     Main client that makes requests and returns objects for better handling.
-    
-    Parametros:
-        session (asyncio.ClientSession)
+
+    Parameters
+    ----------
+        session : asyncio.ClientSession
     """
     def __init__(self, *, session=None):
         self.http = http_client.HttpClient(session=session)
@@ -35,7 +36,10 @@ class NekosLifeClient:
             anekos.result.ImageResult
         """
         if not isinstance(tag, (str, enumeration.SFWImageTags, enumeration.NSFWImageTags)):
-            raise TypeError("'str' or 'Tag' expected")
+            raise TypeError("Union[str, Tag] expected in `tag`")
+
+        if type(get_bytes) is not bool:
+            raise TypeError("bool expected in `get_bytes`")
 
         tag = tag if type(tag) is str else tag.value
 
@@ -69,7 +73,13 @@ class NekosLifeClient:
             anekos.result.ImageResult
         """
         if not sfw and not nsfw:
-            raise Exception()
+            raise RuntimeError("it is necessary to pass 'sfw' or 'nsfw'")
+
+        if type(sfw) != type(nsfw) != bool:
+            raise TypeError("bool expected in `sfw` or `nsfw`")
+
+        if type(get_bytes) is not bool:
+            raise TypeError("bool expected in `get_bytes`")
 
         tags = []
         if sfw:
@@ -90,7 +100,7 @@ class NekosLifeClient:
         Returns a random fact.
 
         Return
-        -------
+        ------
             anekos.result.TextResult
         """
         data_response = await self.http.endpoint("fact")
@@ -102,7 +112,7 @@ class NekosLifeClient:
         Returns a random cat-like text.
 
         Return
-        -------
+        ------
             anekos.result.TextResult
         """
         data_response = await self.http.endpoint("cat")
@@ -114,30 +124,48 @@ class NekosLifeClient:
         Returns a random questionnaire.
 
         Return
-        -------
+        ------
             anekos.result.TextResult
         """
         data_response = await self.http.endpoint("why")
         return result.TextResult(data_response, target="why")
 
-    #async def random_spoiler(self):
-     #   return await self._get("spoiler")
+    async def spoiler(self, text: str):
+        """
+        -> Coroutine
+        Creates an individual spoiler per letter for Discord.
+
+        Paramaters
+        ----------
+            text : str
+        """
+        if type(question) is not str:
+            raise TypeError("str expected in `text`")
+
+        if not (0 < len(text) < 2000):
+            raise TypeError("'text' must be between 1 or 2000 characters")
+
+        data_response = await self.http.endpoint("spoiler", text=text)
+        return result.TextResult(data_response, target="owo")
 
     async def random_name(self):
         """
         -> Coroutine
         Returns a random name.
 
-        Return
-        -------
+        Returns
+        ------
             anekos.result.TextResult
         """
         data_response = await self.http.endpoint("name")
         return result.TextResult(data_response, target="name")
 
     async def owoify(self, text: str):
+        if type(text) is not str:
+            raise TypeError("str expected")
+
         if not (0 < len(text) < 200):
-            raise IndexError()
+            raise IndexError("'text' must be between 1 or 200 characters")
 
         data_response = await self.http.endpoint("owoify", text=text)
         return result.TextResult(data_response, target="owo")
@@ -147,9 +175,24 @@ class NekosLifeClient:
         -> Coroutine
         Returns a random answer for the specified question.
 
-        Return:
+        Parameters
+        ----------
+            question : str
+                The your question.
+
+            get_image_bytes : bool
+                Gets the bytes of an image.
+
+        Return
+        ------
             anekos.result.EightBallResult
         """
+        if type(question) is not str:
+            raise TypeError("str expected in `question`")
+
+        if type(get_image_bytes) is not bool:
+            raise TypeError("bool expected in `get_image_bytes`")
+
         data_response = await self.http.endpoint("8ball")
 
         if get_image_bytes:
@@ -158,3 +201,7 @@ class NekosLifeClient:
             data_response["image_bytes"] = image_bytes
 
         return result.EightBallResult(data_response)
+
+    async def endpoints(self):
+        """Alias for anekos.HTTPClient.endpoints."""
+        return await self.http.endpoints()
