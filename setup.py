@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(name="async-nekos.life-wrapper",
       author="NiumXp",
-      url="https://github.com/NiumXp/Async-nekos.life-wrapper",
+      url="https://github.com/Nekos-life/Async-nekos.life-wrapper",
       version="0.0.1",
       packages=["anekos"],
       license="MIT",
