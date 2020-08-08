@@ -1,5 +1,5 @@
 # Async-nekos.life-wrapper
-An unofficial async wrapper for nekos.life API!
+An official async wrapper for nekos.life API!
 
 # Requirements
 - [aiohttp](https://docs.aiohttp.org/en/stable/#library-installation) (>=3.6.2)
