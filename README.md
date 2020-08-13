@@ -14,8 +14,8 @@ An official async wrapper for nekos.life API!
 
 # Install
 Installing is done purely via git:
-```python
-python -m pip install -U https://github.com/Nekos-life/Async-nekos.life-wrapper
+```sh
+python -m pip install -U git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 ```
 
 # Quick Example
