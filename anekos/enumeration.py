@@ -1,23 +1,21 @@
 from enum import Enum, auto
+from typing import List
 
 
 class AutoName(Enum):
     def _generate_next_value_(name, *args):
+        # https://docs.python.org/3/library/enum.html#using-automatic-values
         return name.lower()
 
     @classmethod
-    def to_list(cls):
+    def to_list(cls) -> List[str]:
+        """Get all values, put them into a list and return.
+
+        Returns
+        -------
+        List[str]
+        """
         return [attr.value for attr in cls]
-
-
-#['HEAD,OPTIONS,GET     /api/hug -DEPRECATED',
-# 'HEAD,OPTIONS,GET     /api/kiss -DEPRECATED',     
-# 'HEAD,OPTIONS,GET     /api/lewd/neko -DEPRECATED',
-# 'HEAD,OPTIONS,GET     /api/lizard -DEPRECATED',   
-# 'HEAD,OPTIONS,GET     /api/neko -DEPRECATED',     
-# 'HEAD,OPTIONS,GET     /api/pat -DEPRECATED',      
-# 'HEAD,OPTIONS,GET     /api/v2/spoiler',
-# 'HEAD,OPTIONS,GET     /api/why -DEPRECATED']
 
 
 class NSFWImageTags(AutoName):

@@ -12,7 +12,7 @@ class NekosLifeClient:
 
     Parameters
     ----------
-        session : asyncio.ClientSession
+    session : asyncio.ClientSession
     """
     def __init__(self, *, session=None):
         self.http = http_client.HttpClient(session=session)
@@ -26,24 +26,25 @@ class NekosLifeClient:
         ----------
         tag : Union[str, anekos.SFWImageTags, anekos.NSFWImageTags]
             The tag of the image.
-
         get_bytes : bool (optional)
             Gets the bytes of an image.
             You can get the bytes of the image by accessing the `bytes` attribute  of the returned object.
 
-        Return
-        ------
-            anekos.result.ImageResult
+        Returns
+        -------
+        anekos.result.ImageResult
         """
         if not isinstance(tag, (str, enumeration.SFWImageTags, enumeration.NSFWImageTags)):
-            raise TypeError("Union[str, Tag] expected in `tag`")
+            raise TypeError(f"{Tag} expected in `tag`")
 
         if type(get_bytes) is not bool:
             raise TypeError("bool expected in `get_bytes`")
 
-        tag = tag if type(tag) is str else tag.value
+        str_tag = tag if type(tag) is str else tag.value
 
-        data_response = await self.http.endpoint("img/" + tag)
+        data_response = await self.http.endpoint("img/" + str_tag)
+
+        data_response["tag"] = tag
 
         if get_bytes:
             image_url = data_response["url"]
@@ -54,23 +55,22 @@ class NekosLifeClient:
 
     async def random_image(self, *, sfw: bool=True, nsfw: bool=False, get_bytes: bool=False):
         """
+        -> Coroutine
         Returns an random image.
 
         Parameters
         ----------
         sfw : bool (optional, default is `True`)
             anekos.SFWImageTags will be used.
-
         nsfw : bool (optional, default is `False`)
             anekos.NSFWImageTags will be used.
-
         get_bytes : bool (optional)
             Gets the bytes of an image.
             You can get the bytes of the image by accessing the `bytes` attribute  of the returned object.
 
-        Return
-        ------
-            anekos.result.ImageResult
+        Returns
+        -------
+        anekos.result.ImageResult
         """
         if not sfw and not nsfw:
             raise RuntimeError("it is necessary to pass 'sfw' or 'nsfw'")
@@ -99,9 +99,9 @@ class NekosLifeClient:
         -> Coroutine
         Returns a random fact.
 
-        Return
-        ------
-            anekos.result.TextResult
+        Returns
+        -------
+        anekos.result.TextResult
         """
         data_response = await self.http.endpoint("fact")
         return result.TextResult(data_response, target="fact")
@@ -111,9 +111,9 @@ class NekosLifeClient:
         -> Coroutine
         Returns a random cat-like text.
 
-        Return
-        ------
-            anekos.result.TextResult
+        Returns
+        -------
+        anekos.result.TextResult
         """
         data_response = await self.http.endpoint("cat")
         return result.TextResult(data_response, target="cat")
@@ -123,9 +123,9 @@ class NekosLifeClient:
         -> Coroutine
         Returns a random questionnaire.
 
-        Return
-        ------
-            anekos.result.TextResult
+        Returns
+        -------
+        anekos.result.TextResult
         """
         data_response = await self.http.endpoint("why")
         return result.TextResult(data_response, target="why")
@@ -137,13 +137,18 @@ class NekosLifeClient:
 
         Paramaters
         ----------
-            text : str
+        text : str
+            It must be between 1 and 2000 characters.
+
+        Returns
+        -------
+        anekos.result.TextResult
         """
         if type(question) is not str:
             raise TypeError("str expected in `text`")
 
         if not (0 < len(text) < 2000):
-            raise TypeError("'text' must be between 1 or 2000 characters")
+            raise TypeError("'text' must be between 1 and 2000 characters")
 
         data_response = await self.http.endpoint("spoiler", text=text)
         return result.TextResult(data_response, target="owo")
@@ -154,15 +159,26 @@ class NekosLifeClient:
         Returns a random name.
 
         Returns
-        ------
-            anekos.result.TextResult
+        -------
+        anekos.result.TextResult
         """
         data_response = await self.http.endpoint("name")
         return result.TextResult(data_response, target="name")
 
     async def owoify(self, text: str):
+        """
+        -> Coroutine
+        OwOify the `text`.
+
+        Parameters
+        text : str
+
+        Returns
+        -------
+        anekos.result.TextResult
+        """
         if type(text) is not str:
-            raise TypeError("str expected")
+            raise TypeError("str expected in `text` parameter")
 
         if not (0 < len(text) < 200):
             raise IndexError("'text' must be between 1 or 200 characters")
@@ -177,21 +193,20 @@ class NekosLifeClient:
 
         Parameters
         ----------
-            question : str
-                The your question.
+        question : str
+            The your question.
+        get_image_bytes : bool
+            Gets the bytes of the image.
 
-            get_image_bytes : bool
-                Gets the bytes of an image.
-
-        Return
-        ------
-            anekos.result.EightBallResult
+        Returns
+        -------
+        anekos.result.EightBallResult
         """
         if type(question) is not str:
-            raise TypeError("str expected in `question`")
+            raise TypeError("str expected in `question` parameter")
 
         if type(get_image_bytes) is not bool:
-            raise TypeError("bool expected in `get_image_bytes`")
+            raise TypeError("bool expected in `get_image_bytes` parameter")
 
         data_response = await self.http.endpoint("8ball")
 

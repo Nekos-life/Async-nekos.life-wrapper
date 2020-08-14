@@ -10,7 +10,7 @@ base = "https://nekos.life/api/v2/"
 Endpoint = namedtuple("Endpoint", "methods url is_deprecated")
 
 
-def make_url(endpoint, parameters):
+def _make_url(endpoint, parameters):
     url = urljoin(base, endpoint)
     if parameters:
         url += '?' + '&'.join(f"{k}={quote(v)}" for (k,v) in parameters.items())
@@ -22,7 +22,7 @@ class HttpClient:
 
     Parameters
     ----------
-        session : :class:`asyncio.ClientSession`
+    session : asyncio.ClientSession
     """
     def __init__(self, *, session=None):
         if session:
@@ -33,7 +33,7 @@ class HttpClient:
         self._endpoints = None
 
     async def get(self, endpoint: str, **parameters):
-        url = make_url(endpoint, parameters)
+        url = _make_url(endpoint, parameters)
         async with self._session.get(url) as response:
             status = response.status
 
@@ -50,34 +50,38 @@ class HttpClient:
 
         return url, response
  
-    async def get_image_bytes(self, image_url: str):
+    async def get_image_bytes(self, url: str):
         """
         -> Coroutine
         Returns the image in bytes.
-        
+
         Paremeters
         ----------
-            image_url : :class:`str`
-                Image URL.
+        url : str
+            Image URL.
 
-        Return
-        ------
-            image_bytes : :class:`bytes`
-                Image in bytes.
+        Returns
+        -------
+        bytes
+            Image in bytes.
         """
-        async with self._session.get(image_url) as response:
+        async with self._session.get(url) as response:
             return await response.read()
  
     async def endpoint(self, endpoint: str, **parameters):
         """
         -> Coroutine
         Makes a GET request in the API's `endpoint`.
-        
-        Parameters:
-            endpoint (str): The endpoint where the GET request will be made.
 
-        Return:
-            dict: The result of the request made.
+        Parameters
+        ----------
+        endpoint : str
+            The endpoint where the GET request will be made.
+
+        Returns
+        -------
+        dict
+            The result of the request made.
         """
         url, response = await self.get(endpoint, **parameters)
         return {"endpoint": url, **response}
@@ -86,10 +90,10 @@ class HttpClient:
         """
         -> Coroutine
         Returns all endpoints of the API.
-        
-        Return
-        ------
-            List[anekos.Endpoint]
+
+        Returns
+        -------
+        List[anekos.Endpoint]
         """
         if self._endpoints:
             return self._endpoints
