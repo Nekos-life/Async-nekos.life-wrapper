@@ -7,5 +7,5 @@ setup(name="async-nekos.life-wrapper",
       packages=["anekos"],
       license="MIT",
       description="An unofficial async wrapper for nekos.life API!",
-      python_requires=">=3.8"
+      python_requires=">=3.7"
 )
