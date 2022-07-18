@@ -1,19 +1,20 @@
-from aiohttp import ClientSession
-
-from urllib.parse import urljoin, quote
 from collections import namedtuple
+from urllib.parse import quote, urljoin
+
+from aiohttp import ClientSession
 
 from . import errors
 
-
-base = "https://nekos.life/api/v2/"
-Endpoint = namedtuple("Endpoint", "methods url is_deprecated")
+base = 'https://nekos.life/api/v2/'
+Endpoint = namedtuple('Endpoint', 'methods url is_deprecated')
 
 
 def _make_url(endpoint, parameters):
     url = urljoin(base, endpoint)
     if parameters:
-        url += '?' + '&'.join(f"{k}={quote(v)}" for (k,v) in parameters.items())
+        url += '?' + '&'.join(
+            f'{k}={quote(v)}' for (k, v) in parameters.items()
+        )
     return url
 
 
@@ -24,6 +25,7 @@ class HttpClient:
     ----------
     session : asyncio.ClientSession
     """
+
     def __init__(self, *, session=None):
         if session:
             self._session = session
@@ -38,18 +40,18 @@ class HttpClient:
             status = response.status
 
             if status in [500, 404]:
-                raise errors.NoResponse("endpoint not found")
+                raise errors.NoResponse('endpoint not found')
 
             response = await response.json()
             # the response can be a list or a dict
             # a list when the request is in /api/v2/endpoints
 
             if type(response) is dict:
-                if response.get("msg", None):
-                    raise errors.NoResponse("endpoint not found")
+                if response.get('msg', None):
+                    raise errors.NoResponse('endpoint not found')
 
         return url, response
- 
+
     async def get_image_bytes(self, url: str):
         """
         -> Coroutine
@@ -67,7 +69,7 @@ class HttpClient:
         """
         async with self._session.get(url) as response:
             return await response.read()
- 
+
     async def endpoint(self, endpoint: str, **parameters):
         """
         -> Coroutine
@@ -84,7 +86,7 @@ class HttpClient:
             The result of the request made.
         """
         url, response = await self.get(endpoint, **parameters)
-        return {"endpoint": url, **response}
+        return {'endpoint': url, **response}
 
     async def endpoints(self):
         """
@@ -93,24 +95,24 @@ class HttpClient:
 
         Returns
         -------
-        List[anekos.Endpoint]
+        List[nekos.Endpoint]
         """
         if self._endpoints:
             return self._endpoints
 
-        _, endpoints_ = await self.get("endpoints")
+        _, endpoints_ = await self.get('endpoints')
         for _ in range(len(endpoints_)):
             endpoint = endpoints_.pop(-1)
             methods, right = endpoint.split('     ')
 
-            if right.endswith("-DEPRECATED"):
+            if right.endswith('-DEPRECATED'):
                 is_deprecated = True
                 url, _ = right.split(' ', 1)
             else:
                 is_deprecated = False
                 url = right
 
-            url = "https://nekos.life" + url
+            url = 'https://nekos.life' + url
 
             endpoint = Endpoint(methods.split(','), url, is_deprecated)
             endpoints_.insert(0, endpoint)
