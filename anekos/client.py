@@ -25,7 +25,7 @@ class NekosLifeClient:
 
         Parameters
         ----------
-        tag : Union[str, nekos.SFWImageTags]
+        tag : Union[str, anekos.SFWImageTags]
             The tag of the image.
         get_bytes : bool (optional)
             Gets the bytes of an image.
@@ -33,24 +33,24 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.ImageResult
+        anekos.result.ImageResult
         """
         if not isinstance(tag, (str, enumeration.SFWImageTags)):
-            raise TypeError(f'{Tag} expected in `tag`')
+            raise TypeError(f"{Tag} expected in `tag`")
 
         if type(get_bytes) is not bool:
-            raise TypeError('bool expected in `get_bytes`')
+            raise TypeError("bool expected in `get_bytes`")
 
         str_tag = tag if type(tag) is str else tag.value
 
-        data_response = await self.http.endpoint('img/' + str_tag)
+        data_response = await self.http.endpoint("img/" + str_tag)
 
-        data_response['tag'] = tag
+        data_response["tag"] = tag
 
         if get_bytes:
-            image_url = data_response['url']
+            image_url = data_response["url"]
             image_bytes = await self.http.get_image_bytes(image_url)
-            data_response['bytes'] = image_bytes
+            data_response["bytes"] = image_bytes
 
         return result.ImageResult(data_response)
 
@@ -62,23 +62,23 @@ class NekosLifeClient:
         Parameters
         ----------
         sfw : bool (optional, default is `True`)
-            nekos.SFWImageTags will be used.
+            anekos.SFWImageTags will be used.
         get_bytes : bool (optional)
             Gets the bytes of an image.
             You can get the bytes of the image by accessing the `bytes` attribute  of the returned object.
 
         Returns
         -------
-        nekos.result.ImageResult
+        anekos.result.ImageResult
         """
         if not sfw:
             raise RuntimeError("it is necessary to pass 'sfw'.")
 
         if type(sfw) != bool:
-            raise TypeError('bool expected in `sfw`')
+            raise TypeError("bool expected in `sfw`")
 
         if type(get_bytes) is not bool:
-            raise TypeError('bool expected in `get_bytes`')
+            raise TypeError("bool expected in `get_bytes`")
 
         tags = []
         if sfw:
@@ -96,10 +96,10 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.TextResult
+        anekos.result.TextResult
         """
-        data_response = await self.http.endpoint('fact')
-        return result.TextResult(data_response, target='fact')
+        data_response = await self.http.endpoint("fact")
+        return result.TextResult(data_response, target="fact")
 
     async def random_cat_text(self):
         """
@@ -108,10 +108,10 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.TextResult
+        anekos.result.TextResult
         """
-        data_response = await self.http.endpoint('cat')
-        return result.TextResult(data_response, target='cat')
+        data_response = await self.http.endpoint("cat")
+        return result.TextResult(data_response, target="cat")
 
     async def random_why(self):
         """
@@ -120,10 +120,10 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.TextResult
+        anekos.result.TextResult
         """
-        data_response = await self.http.endpoint('why')
-        return result.TextResult(data_response, target='why')
+        data_response = await self.http.endpoint("why")
+        return result.TextResult(data_response, target="why")
 
     async def spoiler(self, text: str):
         """
@@ -137,16 +137,16 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.TextResult
+        anekos.result.TextResult
         """
         if type(text) is not str:
-            raise TypeError('str expected in `text`')
+            raise TypeError("str expected in `text`")
 
         if not (0 < len(text) < 2000):
             raise TypeError("'text' must be between 1 and 2000 characters")
 
-        data_response = await self.http.endpoint('spoiler', text=text)
-        return result.TextResult(data_response, target='spoiler')
+        data_response = await self.http.endpoint("spoiler", text=text)
+        return result.TextResult(data_response, target="spoiler")
 
     async def random_name(self):
         """
@@ -155,10 +155,10 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.TextResult
+        anekos.result.TextResult
         """
-        data_response = await self.http.endpoint('name')
-        return result.TextResult(data_response, target='name')
+        data_response = await self.http.endpoint("name")
+        return result.TextResult(data_response, target="name")
 
     async def owoify(self, text: str):
         """
@@ -170,16 +170,16 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.TextResult
+        anekos.result.TextResult
         """
         if type(text) is not str:
-            raise TypeError('str expected in `text` parameter')
+            raise TypeError("str expected in `text` parameter")
 
         if not (0 < len(text) < 200):
             raise IndexError("'text' must be between 1 or 200 characters")
 
-        data_response = await self.http.endpoint('owoify', text=text)
-        return result.TextResult(data_response, target='owo')
+        data_response = await self.http.endpoint("owoify", text=text)
+        return result.TextResult(data_response, target="owo")
 
     async def random_8ball(self, question, *, get_image_bytes: bool = False):
         """
@@ -195,23 +195,23 @@ class NekosLifeClient:
 
         Returns
         -------
-        nekos.result.EightBallResult
+        anekos.result.EightBallResult
         """
         if type(question) is not str:
-            raise TypeError('str expected in `question` parameter')
+            raise TypeError("str expected in `question` parameter")
 
         if type(get_image_bytes) is not bool:
-            raise TypeError('bool expected in `get_image_bytes` parameter')
+            raise TypeError("bool expected in `get_image_bytes` parameter")
 
-        data_response = await self.http.endpoint('8ball')
+        data_response = await self.http.endpoint("8ball")
 
         if get_image_bytes:
-            image_url = data_response['url']
+            image_url = data_response["url"]
             image_bytes = await self.http.get_image_bytes(image_url)
-            data_response['image_bytes'] = image_bytes
+            data_response["image_bytes"] = image_bytes
 
         return result.EightBallResult(data_response)
 
     async def endpoints(self):
-        """Alias for nekos.HTTPClient.endpoints."""
+        """Alias for anekos.HTTPClient.endpoints."""
         return await self.http.endpoints()
