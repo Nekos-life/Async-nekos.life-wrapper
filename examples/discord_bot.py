@@ -3,7 +3,7 @@ from discord.ext import commands
 
 from anekos import NekosLifeClient, SFWImageTags
 
-bot = commands.AutoShardedBot(commands.when_mentioned_or('!'), allowed_mentions=None)
+bot = commands.AutoShardedBot(commands.when_mentioned_or("!"), allowed_mentions=None)
 client = NekosLifeClient()
 
 
@@ -15,13 +15,13 @@ async def on_ready():
 @bot.command()
 async def kiss(ctx, user: discord.Member = None):
     if user == ctx.author or user is None:
-        await ctx.reply('Mention someone!')
+        await ctx.reply("Mention someone!")
     else:
         img = await client.image(SFWImageTags.KISS)
         await ctx.reply(img.url)
 
 
-@bot.command(name='8ball')
+@bot.command(name="8ball")
 async def eightball(ctx, *, question: str):
     ball = await client.random_8ball(question)
     await ctx.reply(ball.text)
@@ -39,4 +39,4 @@ async def owoify(ctx, *, text: str):
     await ctx.reply(owo.text)
 
 
-bot.run('TOKEN')
+bot.run("TOKEN")

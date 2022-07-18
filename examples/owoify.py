@@ -4,7 +4,7 @@ from anekos import NekosLifeClient
 
 client = NekosLifeClient()
 
-text = input(str('Text: '))
+text = input(str("Text: "))
 
 
 async def main():
