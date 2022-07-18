@@ -105,7 +105,8 @@ class HttpClient:
 
             if right.endswith("-DEPRECATED"):
                 is_deprecated = True
-                url, _ = right.split(" ", 1)
+                url, _ = right.split(' ', 1)
+
             else:
                 is_deprecated = False
                 url = right
