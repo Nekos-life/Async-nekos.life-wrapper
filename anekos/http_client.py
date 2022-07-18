@@ -113,7 +113,8 @@ class HttpClient:
 
             url = "https://nekos.life" + url
 
-            endpoint = Endpoint(methods.split(","), url, is_deprecated)
+            endpoint = Endpoint(methods.split(','), url, is_deprecated)
+
             endpoints_.insert(0, endpoint)
 
         self._endpoints = endpoints_
