@@ -18,7 +18,7 @@ setup(
     version='1.0.6',
     packages=['anekos'],
     license='MIT',
-    description='An unofficial asynchronous wrapper for nekos.life API',
+    description='An asynchronous wrapper for nekos.life API',
     long_description=readme,
     long_description_content_type='text/restructured',
     include_package_data=True,
