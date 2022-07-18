@@ -22,7 +22,7 @@ class AutoName(Enum):
 class SFWImageTags(AutoName):
     AVATAR = auto()
     CUDDLE = auto()
-    EIGHTBALL = '8ball'
+    EIGHTBALL = "8ball"
     FEED = auto()
     FOX_GIRL = auto()
     GECG = auto()
@@ -34,7 +34,7 @@ class SFWImageTags(AutoName):
     LIZARD = auto()
     MEOW = auto()
     NEKO = auto()
-    NEKOGIF = 'ngif'
+    NEKOGIF = "ngif"
     PAT = auto()
     SLAP = auto()
     SMUG = auto()
