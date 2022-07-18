@@ -1,7 +1,7 @@
 """
 Async Nekos.Life API Wrapper
 
-An unofficial asynchronous wrapper for nekos.life API
+An asynchronous wrapper for nekos.life API
 """
 
 __title__ = "anekos"

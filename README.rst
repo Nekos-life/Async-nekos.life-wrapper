@@ -14,7 +14,7 @@ anekos
    :target: https://pypi.python.org/pypi/anekos
    :alt: PyPI License
 
-   An unofficial asynchronous wrapper for nekos.life API
+   An asynchronous wrapper for nekos.life API
 
 Features
 ========
@@ -22,7 +22,6 @@ Features
 -  You can download the images! (using
    `aiofile <https://pypi.org/project/aiofile>`__)
 -  Easy to use with an object-oriented design.
-- Regularly updated with new API updates. (as of 11/06/2022)
 
 Install
 =======

@@ -9,9 +9,11 @@ readme = ""
 with open("README.rst") as f:
     readme = f.read()
 
-version = ''
-with open('anekos/__init__.py') as f:
-    version = search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), MULTILINE).group(1)
+version = ""
+with open("anekos/__init__.py") as f:
+    version = search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), MULTILINE
+    ).group(1)
 
 
 setup(
@@ -29,13 +31,15 @@ setup(
     long_description_content_type="text/restructured",
     include_package_data=True,
     install_requires=requirements,
-    python_requires=">=3.8.0",
+    python_requires=">=3.6.0",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
