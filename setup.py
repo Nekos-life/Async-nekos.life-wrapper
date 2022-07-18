@@ -18,7 +18,7 @@ with open("anekos/__init__.py") as f:
 
 setup(
     name="anekos",
-    author="NiumXP",
+    author="NiumXp",
     project_urls={
         "Website": "https://nekos.life",
         "Issue tracker": "https://github.com/Nekos-life/Async-nekos.life-wrapper",
@@ -28,7 +28,7 @@ setup(
     license="MIT",
     description="An unofficial asynchronous wrapper for nekos.life API",
     long_description=readme,
-    long_description_content_type="text/restructured",
+    long_description_content_type="text/x-rst",
     include_package_data=True,
     install_requires=requirements,
     python_requires=">=3.6.0",
