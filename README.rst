@@ -40,7 +40,7 @@ To install the development version, do the following:
 
     $ git clone https://github.com/Nekos-life/Async-nekos.life-wrapper.git
     $ cd Async-nekos.life-wrapper
-    $ python3 -m pip install -U . 
+    $ python3 -m pip install -U .
 
 Optional Packages
 -----------------
@@ -56,7 +56,7 @@ Quick Example
 
 .. code:: py
 
-   from nekos import NekosLifeClient, SFWImageTags
+   from anekos import NekosLifeClient, SFWImageTags
    from asyncio import get_event_loop
 
    client = NekosLifeClient()
