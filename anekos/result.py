@@ -1,9 +1,7 @@
-from os.path import splitext, basename, join
-
-#from .enumeration import SFWImageTags, NSFWImageTags
+from os.path import basename, join, splitext
 
 try:
-    from aiofile import AIOFile
+    from aiofile import AIOFile  # type: ignore
 except ModuleNotFoundError:
     has_aiofile = False
 else:
@@ -19,6 +17,7 @@ class Result:
     endpoint : str
         The endpoint in which the result was returned.
     """
+
     def __init__(self, data: dict):
         self.endpoint = data.pop("endpoint")
 
@@ -34,7 +33,8 @@ class TextResult(Result):
     text : str
         The returned text.
     """
-    def __init__(self, data: dict, target: str="text"):
+
+    def __init__(self, data: dict, target: str = "text"):
         super().__init__(data)
 
         self.text = data.pop(target)
@@ -56,42 +56,19 @@ class ImageResult(Result):
         Image name (without the extension).
     extension : str
         Image extension (PNG, JPG, ...).
-    tag : Union[str, anekos.NSFWImageTags, anekos.SFWImageTags]
+    tag : Union[str, anekos.SFWImageTags]
     bytes : bytes
         Image in bytes, it can be `None`.
     """
+
     def __init__(self, data: dict):
         super().__init__(data)
-        
+
         self.url = url = data.pop("url")
         self.full_name = full_name = basename(url)
         self.name, self.extension = splitext(full_name)
         self.tag = data.pop("tag")
         self.bytes = data.pop("bytes", None)
-
-    def sync_save(self, path: str):
-        """Saves the image in `path`.
-
-        Parameters
-        ----------
-        path : str
-            The path there image will be saved.
-
-        Notes
-        -----
-        THIS FUNCTION CAN "LOCK" YOUR CODE.
-        TRY USE `save` METHOD INSTEAD.
-        """
-        path = join(path, self.full_name)
-        with open(path, "wb") as file:
-            try:
-                file.write(self.bytes)
-            except TypeError:
-                raise RuntimeError("you need to get the image bytes to use this method")
-
-    def sync_download(self, path: str):
-        """Alias for `sync_save` method."""
-        return self.sync_save()
 
     async def save(self, path: str):
         """Saves the image in the `path`.
@@ -104,7 +81,6 @@ class ImageResult(Result):
         Notes
         -----
         THE `aiofile` LIBRARY IS NEEDED IN ORDER TO USE THIS METHOD.
-        USE `sync_save` IF YOU DO NOT WANT TO INSTALL THE `aiofile` LIBRARY.
         """
         if not has_aiofile:
             raise RuntimeError("aiofile library is needed in order to use this method.")
@@ -136,10 +112,10 @@ class EightBallResult(Result):
     image_bytes : bytes
         Image in bytes, it can be `None`.
     """
+
     def __init__(self, data: dict):
         super().__init__(data)
 
         self.text = data.pop("response")
         self.image_url = data.pop("url")
         self.image_bytes = data.pop("bytes", None)
-

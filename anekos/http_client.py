@@ -1,10 +1,9 @@
+from collections import namedtuple
+from urllib.parse import quote, urljoin
+
 from aiohttp import ClientSession
 
-from urllib.parse import urljoin, quote
-from collections import namedtuple
-
 from . import errors
-
 
 base = "https://nekos.life/api/v2/"
 Endpoint = namedtuple("Endpoint", "methods url is_deprecated")
@@ -13,7 +12,7 @@ Endpoint = namedtuple("Endpoint", "methods url is_deprecated")
 def _make_url(endpoint, parameters):
     url = urljoin(base, endpoint)
     if parameters:
-        url += '?' + '&'.join(f"{k}={quote(v)}" for (k,v) in parameters.items())
+        url += '?' + '&'.join(f"{k}={quote(v)}" for (k, v) in parameters.items())
     return url
 
 
@@ -24,6 +23,7 @@ class HttpClient:
     ----------
     session : asyncio.ClientSession
     """
+
     def __init__(self, *, session=None):
         if session:
             self._session = session
@@ -49,7 +49,7 @@ class HttpClient:
                     raise errors.NoResponse("endpoint not found")
 
         return url, response
- 
+
     async def get_image_bytes(self, url: str):
         """
         -> Coroutine
@@ -67,7 +67,7 @@ class HttpClient:
         """
         async with self._session.get(url) as response:
             return await response.read()
- 
+
     async def endpoint(self, endpoint: str, **parameters):
         """
         -> Coroutine
@@ -101,11 +101,12 @@ class HttpClient:
         _, endpoints_ = await self.get("endpoints")
         for _ in range(len(endpoints_)):
             endpoint = endpoints_.pop(-1)
-            methods, right = endpoint.split('     ')
+            methods, right = endpoint.split("     ")
 
             if right.endswith("-DEPRECATED"):
                 is_deprecated = True
                 url, _ = right.split(' ', 1)
+
             else:
                 is_deprecated = False
                 url = right
@@ -113,6 +114,7 @@ class HttpClient:
             url = "https://nekos.life" + url
 
             endpoint = Endpoint(methods.split(','), url, is_deprecated)
+
             endpoints_.insert(0, endpoint)
 
         self._endpoints = endpoints_

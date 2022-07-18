@@ -1,9 +1,9 @@
-import typing
 import random
+import typing
 
-from . import http_client, enumeration, result
+from . import enumeration, http_client, result
 
-Tag = typing.Union[str, enumeration.SFWImageTags, enumeration.NSFWImageTags]
+Tag = typing.Union[str, enumeration.SFWImageTags]
 
 
 class NekosLifeClient:
@@ -14,17 +14,18 @@ class NekosLifeClient:
     ----------
     session : asyncio.ClientSession
     """
+
     def __init__(self, *, session=None):
         self.http = http_client.HttpClient(session=session)
 
-    async def image(self, tag: Tag, get_bytes: bool=False):
+    async def image(self, tag: Tag, get_bytes: bool = False):
         """
         -> Coroutine
         Returns an image of a specific tag.
 
         Parameters
         ----------
-        tag : Union[str, anekos.SFWImageTags, anekos.NSFWImageTags]
+        tag : Union[str, anekos.SFWImageTags]
             The tag of the image.
         get_bytes : bool (optional)
             Gets the bytes of an image.
@@ -34,7 +35,7 @@ class NekosLifeClient:
         -------
         anekos.result.ImageResult
         """
-        if not isinstance(tag, (str, enumeration.SFWImageTags, enumeration.NSFWImageTags)):
+        if not isinstance(tag, (str, enumeration.SFWImageTags)):
             raise TypeError(f"{Tag} expected in `tag`")
 
         if type(get_bytes) is not bool:
@@ -53,7 +54,7 @@ class NekosLifeClient:
 
         return result.ImageResult(data_response)
 
-    async def random_image(self, *, sfw: bool=True, nsfw: bool=False, get_bytes: bool=False):
+    async def random_image(self, *, sfw: bool = True, get_bytes: bool = False):
         """
         -> Coroutine
         Returns an random image.
@@ -62,8 +63,6 @@ class NekosLifeClient:
         ----------
         sfw : bool (optional, default is `True`)
             anekos.SFWImageTags will be used.
-        nsfw : bool (optional, default is `False`)
-            anekos.NSFWImageTags will be used.
         get_bytes : bool (optional)
             Gets the bytes of an image.
             You can get the bytes of the image by accessing the `bytes` attribute  of the returned object.
@@ -72,11 +71,11 @@ class NekosLifeClient:
         -------
         anekos.result.ImageResult
         """
-        if not sfw and not nsfw:
-            raise RuntimeError("it is necessary to pass 'sfw' or 'nsfw'")
+        if not sfw:
+            raise RuntimeError("it is necessary to pass 'sfw'.")
 
-        if type(sfw) != type(nsfw) != bool:
-            raise TypeError("bool expected in `sfw` or `nsfw`")
+        if type(sfw) != bool:
+            raise TypeError("bool expected in `sfw`")
 
         if type(get_bytes) is not bool:
             raise TypeError("bool expected in `get_bytes`")
@@ -85,10 +84,6 @@ class NekosLifeClient:
         if sfw:
             sfw_tags = enumeration.SFWImageTags.to_list()
             tags.extend(sfw_tags)
-
-        if nsfw:
-            nsfw_tags = enumeration.NSFWImageTags.to_list()
-            tags.extend(nsfw_tags)
 
         tag = random.choice(tags)
 
@@ -144,14 +139,14 @@ class NekosLifeClient:
         -------
         anekos.result.TextResult
         """
-        if type(question) is not str:
+        if type(text) is not str:
             raise TypeError("str expected in `text`")
 
         if not (0 < len(text) < 2000):
             raise TypeError("'text' must be between 1 and 2000 characters")
 
         data_response = await self.http.endpoint("spoiler", text=text)
-        return result.TextResult(data_response, target="owo")
+        return result.TextResult(data_response, target="spoiler")
 
     async def random_name(self):
         """
@@ -186,7 +181,7 @@ class NekosLifeClient:
         data_response = await self.http.endpoint("owoify", text=text)
         return result.TextResult(data_response, target="owo")
 
-    async def random_8ball(self, question, *, get_image_bytes: bool=False):
+    async def random_8ball(self, question, *, get_image_bytes: bool = False):
         """
         -> Coroutine
         Returns a random answer for the specified question.
