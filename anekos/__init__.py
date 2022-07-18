@@ -5,7 +5,7 @@ An asynchronous wrapper for nekos.life API
 """
 
 __title__ = "anekos"
-__author__ = "NiumXP"
+__author__ = "NiumXp"
 __license__ = "MIT"
 __version__ = "2.0.0"
 
