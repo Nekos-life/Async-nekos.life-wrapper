@@ -14,7 +14,7 @@ anekos
    :target: https://pypi.python.org/pypi/anekos
    :alt: PyPI License
 
-   An unofficial asynchronous wrapper for nekos.life API
+   An asynchronous wrapper for nekos.life API
 
 Features
 ========
