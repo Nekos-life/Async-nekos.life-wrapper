@@ -19,7 +19,7 @@ class Result:
     """
 
     def __init__(self, data: dict):
-        self.endpoint = data.pop('endpoint')
+        self.endpoint = data.pop("endpoint")
 
 
 class TextResult(Result):
@@ -34,7 +34,7 @@ class TextResult(Result):
         The returned text.
     """
 
-    def __init__(self, data: dict, target: str = 'text'):
+    def __init__(self, data: dict, target: str = "text"):
         super().__init__(data)
 
         self.text = data.pop(target)
@@ -56,7 +56,7 @@ class ImageResult(Result):
         Image name (without the extension).
     extension : str
         Image extension (PNG, JPG, ...).
-    tag : Union[str, nekos.SFWImageTags]
+    tag : Union[str, anekos.SFWImageTags]
     bytes : bytes
         Image in bytes, it can be `None`.
     """
@@ -64,11 +64,11 @@ class ImageResult(Result):
     def __init__(self, data: dict):
         super().__init__(data)
 
-        self.url = url = data.pop('url')
+        self.url = url = data.pop("url")
         self.full_name = full_name = basename(url)
         self.name, self.extension = splitext(full_name)
-        self.tag = data.pop('tag')
-        self.bytes = data.pop('bytes', None)
+        self.tag = data.pop("tag")
+        self.bytes = data.pop("bytes", None)
 
     async def save(self, path: str):
         """Saves the image in the `path`.
@@ -83,18 +83,14 @@ class ImageResult(Result):
         THE `aiofile` LIBRARY IS NEEDED IN ORDER TO USE THIS METHOD.
         """
         if not has_aiofile:
-            raise RuntimeError(
-                'aiofile library is needed in order to use this method.'
-            )
+            raise RuntimeError("aiofile library is needed in order to use this method.")
 
         path = join(path, self.full_name)
-        async with AIOFile(path, 'wb') as file:
+        async with AIOFile(path, "wb") as file:
             try:
                 await file.write(self.bytes)
             except ValueError:
-                raise RuntimeError(
-                    'you need to get the image bytes to use this method'
-                )
+                raise RuntimeError("you need to get the image bytes to use this method")
 
     async def download(self, path: str):
         """Alias for `save` method."""
@@ -120,6 +116,6 @@ class EightBallResult(Result):
     def __init__(self, data: dict):
         super().__init__(data)
 
-        self.text = data.pop('response')
-        self.image_url = data.pop('url')
-        self.image_bytes = data.pop('bytes', None)
+        self.text = data.pop("response")
+        self.image_url = data.pop("url")
+        self.image_bytes = data.pop("bytes", None)
