@@ -12,7 +12,7 @@ Endpoint = namedtuple("Endpoint", "methods url is_deprecated")
 def _make_url(endpoint, parameters):
     url = urljoin(base, endpoint)
     if parameters:
-        url += "?" + "&".join(f"{k}={quote(v)}" for (k, v) in parameters.items())
+        url += '?' + '&'.join(f"{k}={quote(v)}" for (k, v) in parameters.items())
     return url
 
 
